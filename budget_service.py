@@ -20,7 +20,7 @@ def get_single_day_amount(year, month):
 
 
 class BudgetService:
-    def get_total_amount(self, start, end):
+    def get_total_amount(self, start: datetime.date, end: datetime.date):
 
         if start > end:
             return 0
