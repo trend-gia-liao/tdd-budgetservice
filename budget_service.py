@@ -16,7 +16,9 @@ def get_single_day_amount(year, month):
 
 
 class Period:
-    pass
+    def __init__(self, start: datetime.date, end: datetime.date):
+        self.start = start
+        self.end = end
 
 
 class BudgetService:
@@ -31,7 +33,7 @@ class BudgetService:
         total_amount = 0
 
         current_date = start
-        end_month = datetime.date(end.year, end.month, 1)+relativedelta(months=1)
+        end_month = datetime.date(end.year, end.month, 1) + relativedelta(months=1)
         budgets = BudgetRepo().get_all()
         while current_date < end_month:
             budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
@@ -43,7 +45,7 @@ class BudgetService:
         return total_amount
 
     def overlapping_days(self, budget, start, end):
-        period = Period()
+        period = Period(start, end)
         s = start
         e = end
         if budget.year_month == s.strftime('%Y%m'):
