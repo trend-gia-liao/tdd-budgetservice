@@ -2,18 +2,6 @@ import calendar
 import datetime
 from typing import List
 
-from dateutil.relativedelta import relativedelta
-
-
-def get_single_day_amount(year, month):
-    start_year_month = "{:04d}{:02d}".format(year, month)
-    records = BudgetRepo().get_all()
-    for record in records:
-        if record.year_month == start_year_month:
-            return record.daily_amount()
-
-    return 0
-
 
 class Budget:
     year_month: str
@@ -73,9 +61,6 @@ class BudgetService:
 
         if start > end:
             return 0
-
-        if start.year == end.year and start.month == end.month:
-            return get_single_day_amount(start.year, start.month) * (end.day - start.day + 1)
 
         total_amount = 0
 
