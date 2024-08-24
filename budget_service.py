@@ -65,7 +65,7 @@ class Period:
     def overlapping_days(self, another):
         overlapping_start = max(self.start, another.start)
         overlapping_end = min(self.end, another.end)
-        return (overlapping_end - overlapping_start).days + 1
+        return max((overlapping_end - overlapping_start).days + 1, 0)
 
 
 class BudgetService:
@@ -79,14 +79,9 @@ class BudgetService:
 
         total_amount = 0
 
-        current_date = start
-        end_month = datetime.date(end.year, end.month, 1) + relativedelta(months=1)
         budgets = BudgetRepo().get_all()
         period = Period(start, end)
-        while current_date < end_month:
-            budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
-            if budget is not None:
-                total_amount += budget.overlapping_amount(period)
-            current_date += relativedelta(months=1)
+        for budget in budgets:
+            total_amount += budget.overlapping_amount(period)
 
         return total_amount
