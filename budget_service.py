@@ -10,8 +10,7 @@ def get_single_day_amount(year, month):
     records = BudgetRepo().get_all()
     for record in records:
         if record.year_month == start_year_month:
-            month_total_days = record.get_days()
-            return record.amount / month_total_days
+            return record.daily_amount()
 
     return 0
 
@@ -37,10 +36,10 @@ class BudgetService:
                     daily_amount = budget.daily_amount()
                     overlapping_days = budget.get_days() - start.day + 1
                 elif current_date.strftime('%Y%m') == end.strftime('%Y%m'):
-                    daily_amount = get_single_day_amount(end.year, end.month)
+                    daily_amount = budget.daily_amount()
                     overlapping_days = end.day
                 else:
-                    daily_amount = get_single_day_amount(current_date.year, current_date.month)
+                    daily_amount = budget.daily_amount()
                     overlapping_days = budget.get_days()
                 overlapping_amount = daily_amount * overlapping_days
                 total_amount += overlapping_amount
