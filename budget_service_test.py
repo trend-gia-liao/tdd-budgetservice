@@ -32,7 +32,7 @@ class BudgetServiceTestCase(unittest.TestCase):
         start = datetime.date(2024, 5, 1)
         end = datetime.date(2024, 5, 31)
         res = budget_service.get_total_amount(start, end)
-        self.assertEqual
+        self.assertEqual(310, res)
 
     def test_cross_month(self):
         budget_service = BudgetService()
