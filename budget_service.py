@@ -15,6 +15,10 @@ def get_single_day_amount(year, month):
     return 0
 
 
+class Period:
+    pass
+
+
 class BudgetService:
     def get_total_amount(self, start: datetime.date, end: datetime.date):
 
@@ -39,6 +43,7 @@ class BudgetService:
         return total_amount
 
     def overlapping_days(self, budget, start, end):
+        period = Period()
         s = start
         e = end
         if budget.year_month == s.strftime('%Y%m'):
