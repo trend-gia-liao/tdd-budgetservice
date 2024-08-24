@@ -38,9 +38,7 @@ class BudgetService:
                     overlapping_days = end.day
                 else:
                     overlapping_days = budget.get_days()
-                daily_amount = budget.daily_amount()
-                overlapping_amount = daily_amount * overlapping_days
-                total_amount += overlapping_amount
+                total_amount += budget.daily_amount() * overlapping_days
             current_date += relativedelta(months=1)
 
         return total_amount
