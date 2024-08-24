@@ -5,16 +5,12 @@ from typing import List
 from dateutil.relativedelta import relativedelta
 
 
-def get_days_in_month(year, month):
-    return calendar.monthrange(year, month)[1]
-
-
 def get_single_day_amount(year, month):
     start_year_month = "{:04d}{:02d}".format(year, month)
     records = BudgetRepo().get_all()
     for record in records:
         if record.year_month == start_year_month:
-            month_total_days = get_days_in_month(year, month)
+            month_total_days = record.get_days()
             return record.amount / month_total_days
 
     return 0
@@ -38,14 +34,14 @@ class BudgetService:
             budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
             if budget is not None:
                 if current_date.strftime('%Y%m') == start.strftime('%Y%m'):
-                    daily_amount = get_single_day_amount(start.year, start.month)
-                    overlapping_days = get_days_in_month(start.year, start.month) - start.day + 1
+                    daily_amount = budget.amount / budget.get_days()
+                    overlapping_days = budget.get_days() - start.day + 1
                 elif current_date.strftime('%Y%m') == end.strftime('%Y%m'):
                     daily_amount = get_single_day_amount(end.year, end.month)
                     overlapping_days = end.day
                 else:
                     daily_amount = get_single_day_amount(current_date.year, current_date.month)
-                    overlapping_days = get_days_in_month(current_date.year, current_date.month)
+                    overlapping_days = budget.get_days()
                 overlapping_amount = daily_amount * overlapping_days
                 total_amount += overlapping_amount
             current_date += relativedelta(months=1)
@@ -60,6 +56,10 @@ class Budget:
     def __init__(self, year_month, amount):
         self.year_month = year_month
         self.amount = amount
+
+    def get_days(self):
+        first_day = datetime.datetime.strptime(self.year_month, '%Y%m').date()
+        return calendar.monthrange(first_day.year, first_day.month)[1]
 
 
 class BudgetRepo:
