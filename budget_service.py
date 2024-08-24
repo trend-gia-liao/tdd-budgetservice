@@ -48,8 +48,7 @@ class BudgetService:
         else:
             overlapping_end = budget.last_day()
             overlapping_start = budget.first_day()
-        overlapping_days = (overlapping_end - overlapping_start).days + 1
-        return overlapping_days
+        return (overlapping_end - overlapping_start).days + 1
 
 
 class Budget:
