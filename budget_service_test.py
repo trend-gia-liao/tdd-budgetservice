@@ -19,6 +19,12 @@ class BudgetServiceTestCase(unittest.TestCase):
             Budget("202508", 310),
         ]
 
+    def test_no_budget(self):
+        self.fake_get_budgets.return_value = []
+        start = datetime.date(2024, 5, 1)
+        end = datetime.date(2024, 5, 1)
+        self.total_amount_should_be(0, start, end)
+
     def test_invalid_input(self):
         start = datetime.date(2024, 5, 1)
         end = datetime.date(2024, 4, 1)
