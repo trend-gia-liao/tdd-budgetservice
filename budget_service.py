@@ -35,14 +35,11 @@ class Budget:
 
 class BudgetRepo:
     def get_all(self) -> List[Budget]:
-        return [
-            Budget("202405", 310),
-            Budget("202406", 300),
-            Budget("202407", 310),
-            Budget("202408", 310),
-            Budget("202505", 310),
-            Budget("202508", 310),
-        ]
+        return []
+
+
+def get_budgets():
+    return BudgetRepo().get_all()
 
 
 class Period:
@@ -58,9 +55,8 @@ class Period:
 
 class BudgetService:
     def get_total_amount(self, start: datetime.date, end: datetime.date):
-
         if start > end:
             return 0
 
         period = Period(start, end)
-        return sum(map(lambda b: b.overlapping_amount(period), BudgetRepo().get_all()))
+        return sum(map(lambda b: b.overlapping_amount(period), get_budgets()))

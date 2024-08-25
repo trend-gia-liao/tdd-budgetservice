@@ -1,12 +1,23 @@
 import unittest
 import datetime
+from unittest.mock import patch
 
-from budget_service import BudgetService
+from budget_service import Budget, BudgetService
 
 
 class BudgetServiceTestCase(unittest.TestCase):
     def setUp(self):
         self.budget_service = BudgetService()
+        get_budgets_patcher = patch('budget_service.get_budgets')
+        self.fake_get_budgets = get_budgets_patcher.start()
+        self.fake_get_budgets.return_value = [
+            Budget("202405", 310),
+            Budget("202406", 300),
+            Budget("202407", 310),
+            Budget("202408", 310),
+            Budget("202505", 310),
+            Budget("202508", 310),
+        ]
 
     def test_invalid_input(self):
         start = datetime.date(2024, 5, 1)
