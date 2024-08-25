@@ -10,14 +10,6 @@ class BudgetServiceTestCase(unittest.TestCase):
         self.budget_service = BudgetService()
         get_budgets_patcher = patch('budget_service.get_budgets')
         self.fake_get_budgets = get_budgets_patcher.start()
-        self.fake_get_budgets.return_value = [
-            Budget("202405", 310),
-            Budget("202406", 300),
-            Budget("202407", 310),
-            Budget("202408", 310),
-            Budget("202505", 310),
-            Budget("202508", 310),
-        ]
 
     def test_no_budget(self):
         self.fake_get_budgets.return_value = []
@@ -26,36 +18,49 @@ class BudgetServiceTestCase(unittest.TestCase):
         self.total_amount_should_be(0, start, end)
 
     def test_invalid_input(self):
+        self.fake_get_budgets.return_value = [Budget("202405", 310)]
         start = datetime.date(2024, 5, 1)
         end = datetime.date(2024, 4, 1)
         self.total_amount_should_be(0, start, end)
 
     def test_single_day(self):
+        self.fake_get_budgets.return_value = [Budget("202405", 310)]
         start = datetime.date(2024, 5, 1)
         end = datetime.date(2024, 5, 1)
         self.total_amount_should_be(10, start, end)
 
     def test_partial_month(self):
+        self.fake_get_budgets.return_value = [Budget("202405", 310)]
         start = datetime.date(2024, 5, 1)
         end = datetime.date(2024, 5, 10)
         self.total_amount_should_be(100, start, end)
 
     def test_whole_month(self):
+        self.fake_get_budgets.return_value = [Budget("202405", 310)]
         start = datetime.date(2024, 5, 1)
         end = datetime.date(2024, 5, 31)
         self.total_amount_should_be(310, start, end)
 
     def test_cross_month(self):
+        self.fake_get_budgets.return_value = [Budget("202405", 310),
+                                              Budget("202406", 300)]
         start = datetime.date(2024, 5, 31)
         end = datetime.date(2024, 6, 2)
         self.total_amount_should_be(30, start, end)
 
     def test_cross_three_month(self):
+        self.fake_get_budgets.return_value = [Budget("202405", 310),
+                                              Budget("202406", 300),
+                                              Budget("202407", 310)]
         start = datetime.date(2024, 5, 31)
         end = datetime.date(2024, 7, 2)
         self.total_amount_should_be(330, start, end)
 
     def test_cross_year(self):
+        self.fake_get_budgets.return_value = [Budget("202407", 310),
+                                              Budget("202408", 310),
+                                              Budget("202505", 310),
+                                              Budget("202508", 310)]
         start = datetime.date(2024, 7, 31)
         end = datetime.date(2025, 8, 31)
         self.total_amount_should_be(940, start, end)
